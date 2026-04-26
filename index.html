@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sanctuarium</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Sanctuarium">
+    <meta name="theme-color" content="#990000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Bangers&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+
+    <style>
+
+/* =============================================
+   VARIABLES GLOBALES
+   ============================================= */
+:root {
+    --primary: #990000;
+    --primary-bright: #ff4500;
+    --text: #f8fafc;
+    --bg-card: rgba(0, 0, 0, 0.7);
+    --border-card: rgba(255, 69, 0, 0.4);
+    --border-primary: rgba(153, 0, 0, 0.4);
+    --blur: blur(6px);
+}
+
+/* =============================================
+   RESET
+   ============================================= */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+body {
+    font-family: 'Patrick Hand', cursive;
+    color: var(--text);
+    background: #000;
+    overflow-x: hidden;
+}
+
+/* =============================================
+   FOND
+   ============================================= */
+#bg-panorama {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 300vw;
+    background-image: url("arriereplan.PNG");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left center;
+    z-index: -2;
+    transition: transform 0.35s ease;
+}
+
+#bg-fog {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255,0,0,0.08), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(120,0,0,0.10), transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.6), transparent 60%);
+    animation: fogMove 12s ease-in-out infinite alternate;
+}
+
+@keyframes fogMove {
+    from { transform: translateX(-10px); }
+    to   { transform: translateX(10px); }
+}
+
+/* =============================================
+   LAYOUT PRINCIPAL
+   ============================================= */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
+    padding: 10px 10px 140px;
+    background: transparent;
+}
+
+/* =============================================
+   TOP BAR
+   ============================================= */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+    overflow: visible;
+}
+
+.title-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.btn-raz {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+    border: 2px solid rgba(200,0,0,0.7);
+    background: url('raz.png') center / cover no-repeat;
+    cursor: pointer;
+    filter: drop-shadow(0 0 8px rgba(180,0,0,0.7));
+    flex-shrink: 0;
+    transition: transform 0.1s ease, filter 0.1s ease;
+    box-shadow: 0 0 12px rgba(180,0,0,0.4), inset 0 0 6px rgba(0,0,0,0.4);
+}
+
+.btn-raz:active {
+    transform: scale(0.92);
+    filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.8)) brightness(1.3);
+}
+
+.main-title-gothic {
+    font-family: 'Pirata One', cursive;
+    font-size: 50px;
+    color: #8b0000;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 6px #000, 0 0 20px rgba(139,0,0,0.6);
+    line-height: 0.9;
+}
+
+.subtitle-box {
+    font-family: 'Bangers', cursive;
+    font-size: 18px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+/* =============================================
+   BUTIN (carte parchemin)
+   ============================================= */
+.bubble-butin {
+    background: transparent url('parchemin.png') no-repeat center;
+    background-size: 100% 100%;
+    border: none;
+    box-shadow: none;
+    width: 550px;
+    height: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(8px 8px 12px rgba(0,0,0,0.9));
+    padding: 18px 30px;
+    cursor: pointer;
+}
+
+.parchemin-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 2px;
+    padding-top: 2px;
+}
+
+.parchemin-cols {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.parchemin-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.parchemin-row-center {
+    justify-content: center;
+}
+
+.parchemin-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.parchemin-inline {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.parchemin-label {
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    font-size: 13px;
+    color: #000000;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    opacity: 1;
+    line-height: 1.2;
+    font-weight: 700;
+    -webkit-text-stroke: 0.3px #000;
+}
+
+.parchemin-val {
+    font-family: 'Bangers', cursive;
+    font-size: 20px;
+    color: #3a1a00;
+}
+
+.butin-val   { color: #000000 !important; font-size: 22px; }
+.reserve-val { color: #3b0066 !important; }
+.diff-val    { color: #3b0066 !important; }
+.oracle-val  { color: #3b0066 !important; font-size: 22px; }
+.libre-val   { color: #8b0000 !important; font-size: 22px; }
+
+.parchemin-barre {
+    width: 400px !important;
+    height: 10px;
+    background: rgba(10,0,0,0.5);
+    border-radius: 0;
+    overflow: visible;
+    border-top: 1px solid rgba(180,0,0,0.5);
+    border-bottom: 1px solid rgba(180,0,0,0.5);
+    border-left: none;
+    border-right: none;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 0 8px rgba(120,0,0,0.4), inset 0 0 6px rgba(0,0,0,0.6);
+}
+
+.parchemin-barre::before,
+.parchemin-barre::after { content: none; }
+
+.parchemin-barre #bloodFill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #3a0000, #cc0000, #ff4400);
+    transition: width 0.8s ease;
+    box-shadow: 0 0 10px rgba(200,0,0,0.6), inset 0 1px 0 rgba(255,100,0,0.3);
+    position: relative;
+}
+
+/* Reflet sur le sang */
+.parchemin-barre #bloodFill::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 40%;
+    background: rgba(255,100,0,0.15);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.butin-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+
+
+#labelButin {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: #3d2b1f;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0;
+}
+
+#sSolde {
+    font-family: 'Bangers', cursive;
+    font-size: 20px;
+    color: #000000;
+    cursor: pointer;
+    margin-top: 0;
+}
+
+/* Dans le parchemin, uniformiser avec les autres */
+.parchemin-val#sSolde,
+.parchemin-val#sEpargne {
+    font-size: 20px !important;
+    margin-top: 0;
+}
+
+/* =============================================
+   BOUTONS PRINCIPAUX (btn-sang)
+   ============================================= */
+.floating-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.btn-sang {
+    position: relative;
+    flex: 1;
+    height: 50px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #000;
+    border: 1px solid var(--border-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    animation: pulseRitual 3s ease-in-out infinite;
+}
+
+.btn-sang span {
+    position: relative;
+    z-index: 2;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 2px 2px 8px #000;
+}
+
+.btn-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    opacity: 0.7;
+}
+
+.btn-grand-rituel {
+    background: url("reinitialisation.jpg") center 30% / cover no-repeat !important;
+    filter: brightness(0.85) contrast(1.1);
+}
+
+.btn-grand-rituel span {
+    color: #ff4444;
+    font-size: 13px;
+}
+
+@keyframes pulseRitual {
+    0%, 100% { box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); }
+    50%       { box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); }
+}
+
+/* =============================================
+   BARRE DE STATS
+   ============================================= */
+.stats-bar {
+    display: flex;
+    width: 100%;
+    margin: 0 0 12px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-primary);
+    box-shadow: 0 0 15px rgba(153,0,0,0.2), inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.stat {
+    flex: 1;
+    text-align: center;
+    padding: 10px 5px;
+    position: relative;
+}
+
+.stat:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: var(--border-primary);
+}
+
+.stat-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #aaa;
+    font-family: 'Cinzel', serif;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-family: 'Bangers', cursive;
+    color: #fff;
+    margin-top: 3px;
+}
+
+.stat:nth-child(1) .stat-value { color: #ff5555; }
+.stat:nth-child(2) .stat-value { color: #ffaa00; }
+.stat:nth-child(3) .stat-value { color: #55ff88; }
+
+/* =============================================
+   FIOLE
+   ============================================= */
+.fiole {
+    width: 14px;
+    height: 44px;
+    border: 2px solid rgba(153,0,0,0.6);
+    border-radius: 8px 8px 5px 5px;
+    background: rgba(0,0,0,0.7);
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 0 10px rgba(153,0,0,0.3);
+    flex-shrink: 0;
+}
+
+#bloodFill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #660000, #cc0000);
+    transition: width 0.6s ease;
+    border-radius: 4px;
+}
+
+@keyframes dangerBlink {
+    0%, 100% { filter: brightness(1); }
+    50%       { filter: brightness(2.2); }
+}
+
+.gauge-danger {
+    animation: dangerBlink 0.6s infinite;
+}
+
+/* =============================================
+   SWIPE / NAVIGATION
+   ============================================= */
+#swipe-wrapper {
+    overflow: hidden;
+}
+
+#swipe-track {
+    display: flex;
+    width: 300%;
+    transform: translateX(-33.33%);
+    transition: transform 0.35s ease;
+}
+
+.view-pane {
+    width: 33.33%;
+    padding: 0 5px;
+}
+
+.section-title {
+    display: inline-block;
+    padding: 6px 14px;
+    margin-bottom: 10px;
+    background: rgba(153, 0, 0, 0.20);
+    border: 1px solid rgba(153, 0, 0, 0.25);
+    border-radius: 999px;
+    color: #aaa;
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+}
+
+.nav-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    border-top: 2px solid rgba(255,255,255,0.1);
+    display: flex;
+    gap: 8px;
+    padding: 6px 10px 10px;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.nav-btn {
+    flex: 1;
+    max-width: 110px;
+    height: 34px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 4px;
+    font-family: 'Bangers', cursive;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.6);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.nav-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.6);
+}
+
+.nav-btn.active {
+    background: rgba(255,69,0,0.35);
+    color: #fff;
+    border-color: #ff4500;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.6);
+    text-shadow: 1px 1px 0 #000;
+}
+
+/* =============================================
+   CARTES CATÉGORIES
+   ============================================= */
+.cat-card {
+    background: rgba(153, 0, 0, 0.06);
+    border: 1px solid rgba(153, 0, 0, 0.15);
+    border-radius: 16px;
+    margin-bottom: 12px;
+    padding: 12px;
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    box-shadow: 0 0 10px rgba(153,0,0,0.08), inset 0 0 10px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cat-card:active {
+    transform: scale(0.98);
+}
+
+.cat-card:hover {
+    box-shadow: 0 0 18px rgba(153,0,0,0.18), inset 0 0 12px rgba(0,0,0,0.5);
+}
+
+.cat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: #ddd;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+/* =============================================
+   ITEMS (lignes)
+   ============================================= */
+.item-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.item-row input[type="checkbox"] {
+    flex: 0 0 auto;
+}
+
+.item-row .item-label {
+    flex: 1 1 auto;
+    font-size: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.item-row .item-amount {
+    flex: 0 0 auto;
+    font-size: 14px;
+    opacity: 0.8;
+    min-width: 55px;
+    text-align: right;
+}
+
+.item-row button {
+    flex: 0 0 auto;
+    background: none;
+    border: none;
+    color: #ff4500;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+/* =============================================
+   INPUTS
+   ============================================= */
+input[type="text"],
+input[type="number"],
+#importCodeArea {
+    width: 100%;
+    background: rgba(20, 20, 25, 0.8);
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: white;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    outline: none;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(153, 0, 0, 0.3);
+}
+
+/* =============================================
+   GROUPE INPUT + BOUTON +
+   ============================================= */
+.input-plus-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-plus-group input[type="text"],
+.input-plus-group input[type="number"] {
+    margin-bottom: 0; /* annule le margin-bottom global des inputs */
+}
+
+.input-plus-group input[type="text"] {
+    flex: 3;
+}
+
+.input-plus-group input[type="number"] {
+    flex: 1;
+    max-width: 80px;
+}
+
+.btn-plus {
+    position: relative;
+    flex: 0 0 50px;
+    width: 50px;
+    height: 40px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--primary-bright);
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-plus span {
+    position: relative;
+    z-index: 2;
+    font-family: 'Bangers', cursive;
+    font-size: 20px;
+    color: white;
+    text-shadow: 2px 2px 4px #000;
+    line-height: 0;
+}
+
+.btn-plus-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    opacity: 0.7;
+}
+
+/* =============================================
+   LOADER
+   ============================================= */
+#ritualLoader {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 30000;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255,255,255,0.1);
+    border-top: 4px solid #ff0000;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.ritual-text {
+    margin-top: 15px;
+    font-family: 'Cinzel', serif;
+    color: #ff0000;
+    letter-spacing: 2px;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* =============================================
+   MODALS
+   ============================================= */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-box {
+    background: #0a0a0f;
+    border: 2px solid var(--primary);
+    border-radius: 16px;
+    padding: 25px;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(153,0,0,0.4);
+}
+
+.modal-title {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #aaa;
+    margin-bottom: 15px;
+}
+
+.modal-box input {
+    width: 100%;
+    font-family: 'Bangers', cursive;
+    font-size: 32px;
+    text-align: center;
+    background: rgba(153,0,0,0.15);
+    border: 1px solid var(--primary);
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    outline: none;
+}
+
+.modal-cancel {
+    display: block;
+    margin: 12px auto 0;
+    color: #555;
+    background: none;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* =============================================
+   SAVE / IMPORT BOX
+   ============================================= */
+#internalSaveBox {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1a0000;
+    border: 2px solid var(--primary);
+    padding: 20px;
+    z-index: 20000;
+    width: 85%;
+    max-width: 400px;
+    border-radius: 12px;
+}
+
+#internalSaveBox h3 {
+    font-family: 'Cinzel', serif;
+    color: #ff0000;
+    margin-bottom: 12px;
+}
+
+#saveCodeArea {
+    width: 100%;
+    height: 100px;
+    background: #000;
+    color: #fff;
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 12px;
+    resize: none;
+}
+
+#importModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 20000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px;
+}
+
+#importModal h3 {
+    font-family: 'Cinzel', serif;
+    color: #ff0000;
+}
+
+#importCodeArea {
+    width: 80%;
+    height: 100px;
+    margin-bottom: 0;
+}
+
+/* =============================================
+   RESPONSIVE — MOBILE (< 768px)
+   ============================================= */
+@media (max-width: 767px) {
+
+    .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        position: relative;
+    }
+
+    .butin-wrapper {
+        align-self: center;
+        width: 100%;
+    }
+
+    .title-block {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .btn-raz {
+        position: absolute;
+        top: 0px;
+        right: 12px;
+        width: 58px;
+        height: 58px;
+    }
+
+    .main-title-gothic {
+        font-size: 36px;
+    }
+
+    .bubble-butin {
+        width: calc(100vw - 20px);
+        height: 180px;
+        padding: 35px 20px 25px;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .parchemin-cols {
+        gap: 6px;
+    }
+
+
+
+    .parchemin-label {
+        font-family: 'Cinzel Decorative', 'Cinzel', serif;
+        font-size: 12px;
+        color: #000000;
+        font-weight: 700;
+        text-transform: uppercase;
+        opacity: 1;
+        -webkit-text-stroke: 0.3px #000;
+    }
+
+    .parchemin-val,
+    .parchemin-val#sSolde,
+    .parchemin-val#sEpargne {
+        font-family: 'Bangers', cursive !important;
+        font-size: 16px !important;
+        margin-top: 0 !important;
+    }
+
+    .reserve-val, #sEpargne.reserve-val { font-size: 14px !important; }
+    .diff-val, #sEncours.diff-val       { font-size: 14px !important; }
+    .oracle-val, #sPrev.oracle-val      { font-size: 18px !important; }
+    .libre-val, #sReel.libre-val        { font-size: 18px !important; }
+
+    .butin-val, #sSolde.butin-val         { color: #000000 !important; font-size: 16px !important; }
+    .reserve-val, #sEpargne.reserve-val   { color: #3b0066 !important; }
+    .diff-val, #sEncours.diff-val         { color: #3b0066 !important; }
+    .oracle-val, #sPrev.oracle-val        { color: #3b0066 !important; font-size: 16px !important; }
+    .libre-val, #sReel.libre-val          { color: #8b0000 !important; font-size: 16px !important; }
+
+    .parchemin-barre {
+        width: 220px !important;
+        height: 5px;
+    }
+
+    .parchemin-body {
+        gap: 6px;
+        padding-top: 0;
+    }
+
+    .fiole {
+        width: 16px;
+        height: 48px;
+    }
+
+    #labelButin {
+        font-size: 13px;
+        margin-top: 0;
+    }
+
+
+
+    .floating-actions {
+        gap: 6px;
+    }
+
+    .btn-sang span {
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    .btn-video {
+        opacity: 0.5;
+    }
+
+    .stat-label {
+        font-size: 9px;
+    }
+
+    .stat-value {
+        font-size: 16px;
+    }
+
+    .fiole {
+        width: 28px;
+        height: 65px;
+    }
+}
+
+/* =============================================
+   RESPONSIVE — PC (>= 768px)
+   ============================================= */
+@media (min-width: 768px) {
+
+    .main-title-gothic {
+        text-shadow:
+            2px 2px 6px #000,
+            0 0 20px rgba(139,0,0,0.6),
+            0 0 40px rgba(255,255,255,0.12),
+            0 0 80px rgba(255,255,255,0.06);
+        filter: drop-shadow(0 0 18px rgba(255,255,255,0.18));
+    }
+
+    .top-bar {
+        position: relative;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .title-block {
+        align-items: flex-start;
+        flex-shrink: 0;
+    }
+
+    .butin-wrapper {
+        position: static;
+        transform: none;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .btn-raz {
+        position: static;
+        top: auto;
+        right: auto;
+        flex-shrink: 0;
+    }
+
+    .app-container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    #swipe-wrapper {
+        overflow: visible;
+    }
+
+    #swipe-track {
+        width: 100%;
+        transform: none !important;
+        display: flex;
+        gap: 20px;
+    }
+
+    .view-pane {
+        flex: 1;
+        min-width: 0;
+        width: auto;
+    }
+
+    .nav-bar {
+        display: none;
+    }
+
+    #bg-panorama {
+        width: 100vw;
+        height: 100vh;
+        transform: none !important;
+        background-image: url("arriereplanPC.PNG");
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    .main-title-gothic {
+        font-size: 3.5rem;
+    }
+
+    .btn-sang {
+        flex: 1;
+        max-width: 220px;
+    }
+
+    .btn-sang span {
+        font-size: 11px;
+    }
+}
+/* =============================================
+   TRIBUTS
+   ============================================= */
+.tributs-card {
+    border-color: rgba(85, 255, 136, 0.2);
+    box-shadow: 0 0 10px rgba(85,255,136,0.06), inset 0 0 10px rgba(0,0,0,0.4);
+}
+
+.btn-plus-green {
+    border-color: #55ff88;
+}
+
+    </style>
+</head>
+
+<body>
+
+<div id="ritualLoader">
+    <div class="spinner"></div>
+    <div class="ritual-text">Rituel en cours...</div>
+</div>
+
+<div id="bg-panorama"></div>
+<div id="bg-fog"></div>
+
+<div class="app-container">
+
+    <div class="top-bar">
+        <div class="title-block">
+            <h1 class="main-title-gothic">SANCTUARIUM</h1>
+            <span class="subtitle-box">Mon budget zen</span>
+        </div>
+        <div class="butin-wrapper">
+            <div class="bubble-butin" onclick="editSolde()">
+                <div class="parchemin-body">
+                    <div class="parchemin-cols" id="parcheminCols">
+                        <div class="parchemin-row">
+                            <div class="parchemin-inline">
+                                <div class="parchemin-label">MON BUTIN</div>
+                                <div id="sSolde" class="parchemin-val butin-val">0.00€</div>
+                            </div>
+                            <div class="parchemin-inline">
+                                <div class="parchemin-label">RÉSERVE NOIRE</div>
+                                <div id="sEpargne" class="parchemin-val reserve-val">0.00€</div>
+                            </div>
+                        </div>
+                        <div class="parchemin-row">
+                            <div class="parchemin-inline">
+                                <div class="parchemin-label">ORACLE</div>
+                                <div id="sPrev" class="parchemin-val oracle-val">0€</div>
+                            </div>
+                            <div class="parchemin-inline">
+                                <div class="parchemin-label">DIFFÉRÉ</div>
+                                <div id="sEncours" class="parchemin-val diff-val">0€</div>
+                            </div>
+                        </div>
+                        <div class="parchemin-row parchemin-row-center">
+                            <div class="parchemin-inline">
+                                <div class="parchemin-label">LIBRE</div>
+                                <div id="sReel" class="parchemin-val libre-val">0€</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="parchemin-barre">
+                        <div id="bloodFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn-raz" onclick="razTotal()" title="Remise à zéro"></button>
+    </div>
+
+    <div class="floating-actions">
+        <div class="btn-sang" onclick="showInternalSave()">
+            <video src="flammes2.mp4" autoplay loop muted playsinline class="btn-video"></video>
+            <span>ÉCRIT AVEC TON SANG</span>
+        </div>
+        <div class="btn-sang btn-grand-rituel" onclick="grandRituel()" style="background:url('reinitialisation.jpg') center 30% / cover no-repeat !important;">
+            <span>GRAND RITUEL</span>
+        </div>
+        <div class="btn-sang" onclick="openImportModal()">
+            <video src="flammes2.mp4" autoplay loop muted playsinline class="btn-video"></video>
+            <span>INVOCATION</span>
+        </div>
+    </div>
+
+    <div id="swipe-wrapper">
+        <div id="swipe-track">
+
+            <div class="view-pane">
+                <div class="section-title">CHARGES FIXES</div>
+                <div id="catsGrid"></div>
+            </div>
+
+            <div class="view-pane">
+                <div class="section-title">TRIBUTS</div>
+                <div class="cat-card tributs-card">
+                    <div class="cat-header">
+                        <span>OFFRANDES REÇUES</span>
+                        <span id="tributsTotal" style="color:#55ff88;">+0€</span>
+                    </div>
+                    <div id="tributsList"></div>
+                    <div class="input-plus-group">
+                        <input type="text" id="tribLib" placeholder="Source du tribut...">
+                        <input type="number" id="tribAmt" placeholder="€">
+                        <button class="btn-plus btn-plus-green" onclick="addTribut()">
+                            <video src="revenus.mp4" autoplay loop muted playsinline class="btn-plus-video"></video>
+                            <span>+</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="section-title">JOURNAL CB</div>
+                <div class="cat-card" style="background-image:url('ecrit.gif'); background-size:cover;">
+                    <div class="input-plus-group">
+                        <input type="text" id="txLib" placeholder="Lieu de l'offrande...">
+                        <input type="number" id="txAmt" placeholder="Montant">
+                        <button class="btn-plus" onclick="addTx()">
+                            <video src="plus.mp4" autoplay loop muted playsinline class="btn-plus-video"></video>
+                            <span>+</span>
+                        </button>
+                    </div>
+                    <div class="radio-group" style="margin-top:8px; display:flex; gap:15px; color:#ccc; font-size:14px;">
+                        <label><input type="radio" name="txType" value="immediat" checked> Immédiat</label>
+                        <label><input type="radio" name="txType" value="differe"> Différé</label>
+                    </div>
+                </div>
+                <div id="txList"></div>
+            </div>
+
+            <div class="view-pane">
+                <div class="section-title">VARIABLES</div>
+                <div id="varsGrid"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <nav class="nav-bar">
+        <button class="nav-btn" onclick="nav(0)">FIXES</button>
+        <button class="nav-btn active" onclick="nav(1)">JOURNAL</button>
+        <button class="nav-btn" onclick="nav(2)">VARIABLES</button>
+    </nav>
+
+</div>
+
+<!-- MODAL BUTIN -->
+<div id="butinModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-title">MON BUTIN</div>
+        <input id="butinInput" type="number">
+        <div class="btn-sang" style="width:100%; max-width:none;" onclick="confirmButin()">
+            <span>Confirmer</span>
+        </div>
+        <button class="modal-cancel" onclick="document.getElementById('butinModal').style.display='none'">Annuler</button>
+    </div>
+</div>
+
+<!-- MODAL SAVE -->
+<div id="internalSaveBox">
+    <h3>TON CODE DE SANG</h3>
+    <textarea id="saveCodeArea" readonly></textarea>
+    <div style="display:flex; gap:10px;">
+        <div class="btn-sang" style="flex:1;" onclick="copyCode()"><span>COPIER</span></div>
+        <div class="btn-sang" style="flex:1;" onclick="document.getElementById('internalSaveBox').style.display='none'"><span>FERMER</span></div>
+    </div>
+</div>
+
+<!-- MODAL IMPORT -->
+<div id="importModal">
+    <h3>INVOQUER UN RITUEL</h3>
+    <textarea id="importCodeArea" placeholder="Colle ton code ici..."></textarea>
+    <div style="display:flex; gap:10px;">
+        <div class="btn-sang" style="flex:1;" onclick="confirmImport()"><span>INVOQUER</span></div>
+        <div class="btn-sang" style="flex:1;" onclick="closeImportModal()"><span>ANNULER</span></div>
+    </div>
+</div>
+
+<script>
+
+/* =============================================
+   DONNÉES
+   ============================================= */
+const KEY = 'sanct_v4_triple';
+
+const catConfig = { m:'Maison', c:'Crédits', v:'Transport', a:'Abos', s:'Santé', o:'Autres' };
+const varCats   = ['Alimentaire', 'Carburants', 'Loisirs', 'Cadeaux', 'Equipement', 'Épargne'];
+
+function save() {
+    localStorage.setItem(KEY, JSON.stringify(store));
+}
+
+let store = JSON.parse(localStorage.getItem(KEY)) || {
+    solde: 3000,
+    transactions: [],
+    fixes:     Object.keys(catConfig).map(id  => ({ id,   items: [] })),
+    variables: varCats.map(name => ({ name, items: [] })),
+    tributs:   [],
+    epargne:   0
+};
+
+// Migration : ajouter tributs si absent (données existantes)
+if (!store.tributs) store.tributs = [];
+if (store.epargne === undefined) store.epargne = 0;
+
+// Migration : ajouter les nouvelles catégories variables manquantes
+varCats.forEach(name => {
+    if (!store.variables.find(c => c.name === name)) {
+        store.variables.push({ name, items: [] });
+    }
+});
+
+/* =============================================
+   NAVIGATION / SWIPE
+   ============================================= */
+const IS_PC  = () => window.innerWidth >= 768;
+let currentPage = 1;
+
+const track   = document.getElementById('swipe-track');
+const wrapper = document.getElementById('swipe-wrapper');
+const bg      = document.getElementById('bg-panorama');
+
+function nav(idx) {
+    currentPage = idx;
+    track.style.transition = 'transform 0.35s ease';
+    track.style.transform  = `translateX(${idx * -33.33}%)`;
+    if (!IS_PC()) bg.style.transform = `translateX(${-idx * 100}vw)`;
+    document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+}
+
+let touchStartX = 0, touchStartY = 0, isDragging = false;
+
+wrapper.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isDragging  = false;
+    track.style.transition = 'none';
+    if (!IS_PC()) bg.style.transition = 'none';
+}, { passive: true });
+
+wrapper.addEventListener('touchmove', e => {
+    const dx = e.touches[0].clientX - touchStartX;
+    const dy = e.touches[0].clientY - touchStartY;
+    if (!isDragging && Math.abs(dy) > Math.abs(dx)) return;
+    isDragging = true;
+    e.preventDefault();
+    track.style.transform = `translateX(calc(${currentPage * -33.33}% + ${dx}px))`;
+    if (!IS_PC()) bg.style.transform = `translateX(calc(${currentPage * -100}vw + ${dx}px))`;
+}, { passive: false });
+
+wrapper.addEventListener('touchend', e => {
+    if (!isDragging) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (dx < -50 && currentPage < 2) currentPage++;
+    else if (dx > 50 && currentPage > 0) currentPage--;
+    nav(currentPage);
+}, { passive: true });
+
+/* =============================================
+   CALCUL & MISE À JOUR
+   ============================================= */
+function update() {
+    save();
+
+    let tf = 0, pf = 0, tv = 0, pv = 0;
+
+    store.fixes.forEach(c => c.items.forEach(it => {
+        tf += it.amt;
+        if (it.done) pf += it.amt;
+    }));
+
+    store.variables.forEach(v => v.items.forEach(it => {
+        tv += it.amt;
+        if (it.done) pv += it.amt;
+    }));
+
+    const tCB       = store.transactions.filter(t => t.type !== 'differe').reduce((s,t) => s + t.amt, 0);
+    const tDiff     = store.transactions.filter(t => t.type === 'differe').reduce((s,t) => s + t.amt, 0);
+    const tTrib     = store.tributs.reduce((s,t) => s + t.amt, 0);          // tous les tributs attendus
+    const tribPercu = store.tributs.filter(t => t.done).reduce((s,t) => s + t.amt, 0); // cochés = perçus
+
+    // ORACLE : solde − toutes charges prévues + tous tributs attendus
+    const oracle = store.solde - tf - tv + tTrib;
+    // LIBRE : solde − charges payées − CB immédiats + tributs perçus
+    const libre  = store.solde - pf - pv - tCB + tribPercu;
+
+    // Total tributs affiché
+    const el = document.getElementById('tributsTotal');
+    if (el) el.textContent = '+' + tTrib.toFixed(2) + '€';
+
+    document.getElementById('sPrev').textContent    = oracle.toFixed(2) + '€';
+    document.getElementById('sReel').textContent    = libre.toFixed(2) + '€';
+    document.getElementById('sEncours').textContent = tDiff.toFixed(2) + '€';
+    document.getElementById('sSolde').textContent   = store.solde.toFixed(2) + '€';
+    const elEp = document.getElementById('sEpargne');
+    if (elEp) elEp.textContent = (store.epargne || 0).toFixed(2) + '€';
+
+    // Fiole
+    const gauge = document.getElementById('bloodFill');
+    let pct = store.solde > 0 ? (libre / store.solde) * 100 : 0;
+    pct = Math.max(0, Math.min(100, pct));
+
+    const r = Math.round(255 * (1 - pct / 100));
+    const g = Math.round(255 * (pct / 100));
+    gauge.style.background = `linear-gradient(to right, rgb(${r},${g},0), rgba(0,0,0,0.3))`;
+    gauge.style.width  = pct + '%';
+    gauge.style.height = '100%';
+    gauge.classList.toggle('gauge-danger', pct <= 10);
+}
+
+/* =============================================
+   RENDER
+   ============================================= */
+function render() {
+    // --- FIXES ---
+    const gridF = document.getElementById('catsGrid');
+    gridF.innerHTML = '';
+
+    store.fixes.forEach(cat => {
+        const div = document.createElement('div');
+        div.className = 'cat-card';
+        div.innerHTML = `
+            <div class="cat-header">
+                <span>${catConfig[cat.id]}</span>
+                <span>${cat.items.reduce((s,i) => s + i.amt, 0)}€</span>
+            </div>
+            ${cat.items.map((it, i) => `
+                <div class="item-row">
+                    <input type="checkbox" ${it.done ? 'checked' : ''} onchange="toggleItem('fix','${cat.id}',${i})">
+                    <span class="item-label">${it.l}</span>
+                    <span class="item-amount">${it.amt}€</span>
+                    <button onclick="delItem('fix','${cat.id}',${i})">×</button>
+                </div>
+            `).join('')}
+            <div class="input-plus-group">
+                <input type="text"   id="fi-l-${cat.id}" placeholder="Nom">
+                <input type="number" id="fi-a-${cat.id}" placeholder="€">
+                <button class="btn-plus" onclick="addItem('fix','${cat.id}')">
+                    <video src="plus.mp4" autoplay loop muted playsinline class="btn-plus-video"></video>
+                    <span>+</span>
+                </button>
+            </div>`;
+        gridF.appendChild(div);
+    });
+
+    // --- VARIABLES ---
+    const gridV = document.getElementById('varsGrid');
+    gridV.innerHTML = '';
+
+    store.variables.forEach((cat, idx) => {
+        const div = document.createElement('div');
+        div.className = 'cat-card';
+        div.innerHTML = `
+            <div class="cat-header">
+                <span>${cat.name}</span>
+                <span>${cat.items.reduce((s,i) => s + i.amt, 0)}€</span>
+            </div>
+            ${cat.items.map((it, i) => `
+                <div class="item-row">
+                    <input type="checkbox" ${it.done ? 'checked' : ''} onchange="toggleItem('var',${idx},${i})">
+                    <span class="item-label">${it.l}</span>
+                    <span class="item-amount">${it.amt}€</span>
+                    <button onclick="delItem('var',${idx},${i})">×</button>
+                </div>
+            `).join('')}
+            <div class="input-plus-group">
+                <input type="text"   id="vi-l-${idx}" placeholder="Objet">
+                <input type="number" id="vi-a-${idx}" placeholder="€">
+                <button class="btn-plus" onclick="addItem('var',${idx})">
+                    <video src="plus.mp4" autoplay loop muted playsinline class="btn-plus-video"></video>
+                    <span>+</span>
+                </button>
+            </div>`;
+        gridV.appendChild(div);
+    });
+
+    renderTributs();
+    renderTx();
+    update();
+}
+
+/* =============================================
+   ACTIONS ITEMS
+   ============================================= */
+function addItem(type, id) {
+    const prefix = type === 'fix' ? 'fi' : 'vi';
+    const lEl = document.getElementById(`${prefix}-l-${id}`);
+    const aEl = document.getElementById(`${prefix}-a-${id}`);
+    if (!lEl.value || !aEl.value) return;
+
+    const list = type === 'fix'
+        ? store.fixes.find(c => c.id === id).items
+        : store.variables[id].items;
+
+    list.push({ l: lEl.value, amt: parseFloat(aEl.value), done: false });
+    lEl.value = '';
+    aEl.value = '';
+    render();
+}
+
+function toggleItem(type, id, i) {
+    const list = type === 'fix'
+        ? store.fixes.find(c => c.id === id).items
+        : store.variables[id].items;
+    list[i].done = !list[i].done;
+    render();
+}
+
+function delItem(type, id, i) {
+    const list = type === 'fix'
+        ? store.fixes.find(c => c.id === id).items
+        : store.variables[id].items;
+    list.splice(i, 1);
+    render();
+}
+
+/* =============================================
+   TRIBUTS
+   ============================================= */
+function renderTributs() {
+    document.getElementById('tributsList').innerHTML = store.tributs.map((t, i) => `
+        <div class="item-row">
+            <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTribut(${i})">
+            <span class="item-label" style="${t.done ? 'text-decoration:line-through;opacity:0.5;' : ''}">${t.lib}</span>
+            <span class="item-amount" style="color:#55ff88;">+${t.amt}€</span>
+            <button onclick="delTribut(${i})">×</button>
+        </div>
+    `).join('');
+}
+
+function addTribut() {
+    const lEl = document.getElementById('tribLib');
+    const aEl = document.getElementById('tribAmt');
+    if (!lEl.value || !aEl.value) return;
+    store.tributs.unshift({ lib: lEl.value, amt: parseFloat(aEl.value), done: false });
+    lEl.value = '';
+    aEl.value = '';
+    render();
+}
+
+function toggleTribut(i) {
+    store.tributs[i].done = !store.tributs[i].done;
+    render();
+}
+
+function delTribut(i) {
+    store.tributs.splice(i, 1);
+    render();
+}
+
+/* =============================================
+   TRANSACTIONS
+   ============================================= */
+function addTx() {
+    const lEl = document.getElementById('txLib');
+    const aEl = document.getElementById('txAmt');
+    const type = document.querySelector('input[name="txType"]:checked').value;
+    if (!lEl.value || !aEl.value) return;
+
+    store.transactions.unshift({ lib: lEl.value, amt: parseFloat(aEl.value), type });
+    lEl.value = '';
+    aEl.value = '';
+    render();
+}
+
+function renderTx() {
+    document.getElementById('txList').innerHTML = store.transactions.map((t, i) => `
+        <div class="item-row">
+            <span class="item-label">${t.lib} (${t.type})</span>
+            <span class="item-amount">-${t.amt}€</span>
+            <button onclick="delTx(${i})">×</button>
+        </div>
+    `).join('');
+}
+
+function delTx(i) {
+    store.transactions.splice(i, 1);
+    render();
+
+
+}
+
+/* =============================================
+   SOLDE
+   ============================================= */
+function editSolde() {
+    document.getElementById('butinModal').style.display = 'flex';
+    document.getElementById('butinInput').value = store.solde;
+}
+
+function confirmButin() {
+    const v = parseFloat(document.getElementById('butinInput').value);
+    if (!isNaN(v)) { store.solde = v; render(); }
+    document.getElementById('butinModal').style.display = 'none';
+}
+
+/* =============================================
+   GRAND RITUEL
+   ============================================= */
+function grandRituel() {
+    if (!confirm("Lancer le Grand Rituel ?")) return;
+
+    document.getElementById('ritualLoader').style.display = 'flex';
+
+    setTimeout(() => {
+        const libre = parseFloat(document.getElementById('sReel').textContent);
+        // Calculer l'épargne du mois (items cochés dans la catégorie Épargne)
+        const catEpargne = store.variables.find(c => c.name === 'Épargne');
+        const epargneMonth = catEpargne
+            ? catEpargne.items.filter(it => it.done).reduce((s, it) => s + it.amt, 0)
+            : 0;
+        store.epargne = (store.epargne || 0) + epargneMonth;
+        store.solde = libre;
+        store.transactions = [];
+        store.fixes.forEach(cat => cat.items.forEach(it => it.done = false));
+        store.variables.forEach(cat => cat.items.forEach(it => it.done = false));
+        render();
+        document.getElementById('ritualLoader').style.display = 'none';
+    }, 1200);
+}
+
+/* =============================================
+   RAZ
+   ============================================= */
+function razTotal() {
+    if (!confirm("Remise à zéro complète ? Toutes les données seront effacées.")) return;
+    localStorage.removeItem(KEY);
+    location.reload();
+}
+
+/* =============================================
+   SAVE / IMPORT
+   ============================================= */
+function showInternalSave() {
+    document.getElementById('saveCodeArea').value = btoa(JSON.stringify(store));
+    document.getElementById('internalSaveBox').style.display = 'block';
+}
+
+function copyCode() {
+    const area = document.getElementById('saveCodeArea');
+    area.select();
+    document.execCommand('copy');
+    alert("Le rituel est gravé dans ton presse-papier !");
+}
+
+function openImportModal() {
+    document.getElementById('importModal').style.display = 'flex';
+}
+
+function closeImportModal() {
+    document.getElementById('importModal').style.display = 'none';
+}
+
+function confirmImport() {
+    const code = document.getElementById('importCodeArea').value;
+    try {
+        const decoded = JSON.parse(atob(code));
+        if (confirm("Invoquer ces données écrasera ton sanctuaire actuel. Continuer ?")) {
+            store = decoded;
+            save();
+            location.reload();
+        }
+    } catch (e) {
+        alert("Le code d'invocation est corrompu ou incomplet...");
+    }
+}
+
+/* =============================================
+   INIT
+   ============================================= */
+render();
+
+</script>
+</body>
+</html>
